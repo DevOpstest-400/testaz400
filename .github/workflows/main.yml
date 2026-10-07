@@ -26,16 +26,24 @@ jobs:
   plan:
     name: Plan
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Check Azure secrets availability
+        shell: bash
+        run: |
+          [ -n "$ARM_CLIENT_ID" ] && echo "ARM_CLIENT_ID is available" || echo "ARM_CLIENT_ID is EMPTY"
+          [ -n "$ARM_TENANT_ID" ] && echo "ARM_TENANT_ID is available" || echo "ARM_TENANT_ID is EMPTY"
+          [ -n "$ARM_SUBSCRIPTION_ID" ] && echo "ARM_SUBSCRIPTION_ID is available" || echo "ARM_SUBSCRIPTION_ID is EMPTY"
+          [ -n "$ARM_CLIENT_SECRET" ] && echo "ARM_CLIENT_SECRET is available" || echo "ARM_CLIENT_SECRET is EMPTY"
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.9.8"
 
-       
       - name: Terraform init
         run: |
           terraform init \
